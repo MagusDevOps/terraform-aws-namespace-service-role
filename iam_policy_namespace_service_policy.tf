@@ -111,11 +111,13 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
 
   statement {
     sid = "s3"
+
     actions = [
       "s3:PutObject",
       "s3:GetObject",
-      "s3:DeleteObject"
+      "s3:DeleteObject",
     ]
+
     resources = [
       "arn:aws:s3:*:${var.account_id}:${local.prefix}-${local.namespace}/*",
     ]
