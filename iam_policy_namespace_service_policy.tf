@@ -17,10 +17,13 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
 
     actions = [
       "kms:Decrypt",
+      "kms:Generate*",
+      "kms:Verify",
+      "kms:Encrypt",
     ]
 
     resources = [
-      "arn:aws:kms:*:${var.account_id}:key/${var.namespace}/*",
+      "arn:aws:kms:*:${var.account_id}:key/${local.prefix}/${local.namespace}/*",
     ]
   }
 
