@@ -1,5 +1,7 @@
 data "aws_iam_policy_document" "namespace_service_policy_document" {
   statement {
+    sid = "Hydrate"
+
     actions = [
       "ec2:CreateTags",
       "logs:CreateLogGroup",
@@ -11,6 +13,8 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
   }
 
   statement {
+    sid = "Crypto"
+
     actions = [
       "kms:Decrypt",
     ]
@@ -21,6 +25,8 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
   }
 
   statement {
+    sid = "topicPublishing"
+
     actions = [
       "sns:Publish",
     ]
@@ -31,6 +37,8 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
   }
 
   statement {
+    sid = "queuing"
+
     actions = [
       "sqs:ReceiveMessage",
       "sqs:ChangeMessageVisibility",
@@ -44,6 +52,8 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
   }
 
   statement {
+    sid = "secrets"
+
     actions = [
       "secretsmanager:GetResourcePolicy",
       "secretsmanager:GetSecretValue",
@@ -57,12 +67,57 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
   }
 
   statement {
+    sid = "secretsParameters"
+
     actions = [
       "ssm:GetParameter",
     ]
 
     resources = [
       "arn:aws:ssm:*:${var.account_id}:parameter:${local.prefix}/${local.namespace}/*",
+    ]
+  }
+
+  statement {
+    sid = "email"
+
+    actions = [
+      "ses:Send*",
+    ]
+
+    resources = [
+      "arn:aws:ses:*:${var.account_id}:identity/${local.prefix}/${local.namespace}/*",
+    ]
+  }
+
+  statement {
+    sid = "dynamo"
+
+    actions = [
+      "dynamodb:Batch*",
+      "dynamodb:Condition*",
+      "dynamodb:DeleteItem",
+      "dynamodb:Describe*",
+      "dynamodb:Get*",
+      "dynamodb:Put*",
+      "dynamodb:Scan",
+      "dynamodb:UpdateItem",
+    ]
+
+    resources = [
+      "arn:aws:dynamodb:*:${var.account_id}:table/${local.prefix}_${local.namespace}*",
+    ]
+  }
+
+  statement {
+    sid = "s3"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject"
+    ]
+    resources = [
+      "arn:aws:s3:*:${var.account_id}:${local.prefix}-${local.namespace}/*",
     ]
   }
 }
