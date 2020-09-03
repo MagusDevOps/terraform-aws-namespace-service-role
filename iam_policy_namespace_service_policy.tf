@@ -41,9 +41,11 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
 
   statement {
     sid = "kmsListAliases"
+
     actions = [
-      "kms:ListAliases"
+      "kms:ListAliases",
     ]
+
     resources = ["*"]
   }
 
