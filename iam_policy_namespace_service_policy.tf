@@ -92,6 +92,22 @@ data "aws_iam_policy_document" "namespace_service_policy_document" {
   }
 
   statement {
+    sid = "keyspace"
+
+    actions = [
+      "cassandra:Alter",
+      "cassandra:Create",
+      "cassandra:Modify",
+      "cassandra:Select",
+    ]
+
+    resources = [
+      "arn:aws:cassandra:*:${var.account_id}:/keyspace/${local.prefix}_${local.namespace}/",
+      "arn:aws:cassandra:*:${var.account_id}:/keyspace/${local.prefix}_${local.namespace}/table/*",
+    ]
+  }
+
+  statement {
     sid = "secretsParameters"
 
     actions = [
