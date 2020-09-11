@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "service_role_document" {
+data "aws_iam_policy_document" "role_document" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -15,28 +15,28 @@ data "aws_iam_policy_document" "service_role_document" {
   }
 }
 
-resource "aws_iam_role" "service_role" {
+resource "aws_iam_role" "role" {
   name               = "${local.prefix}-${var.namespace}-service-role"
-  assume_role_policy = "${data.aws_iam_policy_document.service_role_document.json}"
+  assume_role_policy = "${data.aws_iam_policy_document.role_document.json}"
   tags               = "${local.tags}"
 }
 
 resource "aws_iam_role_policy_attachment" "attach_ssm_core" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  role       = "${aws_iam_role.service_role.name}"
+  role       = "${aws_iam_role.role.name}"
 }
 
 resource "aws_iam_role_policy_attachment" "attach_cloudwatch_agent_server" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-  role       = "${aws_iam_role.service_role.name}"
+  role       = "${aws_iam_role.role.name}"
 }
 
 resource "aws_iam_role_policy_attachment" "attach_ec2_readonly_access" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
-  role       = "${aws_iam_role.service_role.name}"
+  role       = "${aws_iam_role.role.name}"
 }
 
 resource "aws_iam_role_policy_attachment" "attach_service_policy" {
-  policy_arn = "${aws_iam_policy.namespace_service_policy.arn}"
-  role       = "${aws_iam_role.service_role.name}"
+  policy_arn = "${aws_iam_policy.namespace_policy.arn}"
+  role       = "${aws_iam_role.role.name}"
 }

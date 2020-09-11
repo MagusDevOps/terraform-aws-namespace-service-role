@@ -74,7 +74,7 @@ Default: `"environment"`
 
 The following outputs are exported:
 
-### assumable\_service\_role\_name
+### role\_name
 
-### service\_role\_arn
+### role\_arn
 
